@@ -1,0 +1,68 @@
+{
+    "MyActuator RMD-X6 V3":
+    {
+        "R": 0.275,
+        "L": 0.090,
+        "ke": 0.0900,
+        "i_quadrature_max": 10.8,
+        "i_quadrature_nominal": 3.6,
+        "np": 28,
+        "U": 48,
+        "reduction_ratio": 8
+    },
+    "MyActuator RMD-X6 V2":
+    {
+        "R": 0.165,
+        "L": 0.095,
+        "ke": 0.0919,
+        "i_quadrature_max": 12.0,
+        "i_quadrature_nominal": 4,
+        "np": 28,
+        "U": 24,
+        "reduction_ratio": 6
+    },
+    "Maxon EC45-70W (548270)":
+    {
+        "R": 0.304,
+        "L": 0.232,
+        "ke": 0.0246,
+        "i_quadrature_max": 39.5,
+        "i_quadrature_nominal": 3.2,
+        "np": 16,
+        "U": 24,
+        "reduction_ratio": 1
+    },
+    "Maxon EC60-100W (542002)":
+    {
+        "R": 0.153,
+        "L": 0.094,
+        "ke": 0.0356,
+        "i_quadrature_max": 78.2,
+        "i_quadrature_nominal": 5.47,
+        "np": 14,
+        "U": 24,
+        "reduction_ratio": 1
+    },
+    "MAD 5005":
+    {
+        "R": 0.084,
+        "L": 0.0575,
+        "ke": 0.0197,
+        "i_quadrature_max": 18.4,
+        "i_quadrature_nominal": 5.0,
+        "np": 28,
+        "U": 22,
+        "reduction_ratio": 1
+    },
+    "MyActuator RMD-L-7025":
+    {
+        "R": 0.140,
+        "L": 0.120,
+        "ke": 0.0698,
+        "i_quadrature_max": 15.0,
+        "i_quadrature_nominal": 8.3,
+        "np": 28,
+        "U": 24,
+        "reduction_ratio": 1
+    }
+}
