@@ -1,5 +1,3 @@
-<img align="left" width="60" height="60" src="src/nemo_bldc/doc/logo.png" alt="Resume application project app icon">
-
 # Nemo
 
 In drones or in robotics, brushless motors are becoming more and more common. However, choosing the right motor for the right application can be quite difficult. Indeed, understanding datasheets can be quite complexe: is a motor with a no-load speed of 5000rpm more powerful that one with the same torque, but specified for 3000rpm at max torque? How do you compare a motor with a KV of 500 rpm/V with one with a Kt of 0.5Nm/Arms? And what do these value even mean? Sometimes you might feel like nobody can answer - well now, **Nemo** can!

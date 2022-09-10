@@ -13,20 +13,24 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  test:
 
-    runs-on: python:3.8-buster
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v3
+    - name: Set up Python 3.10
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.10"
     - name: Install dependencies
       run: |
         # The first requirements are for pygobject.
         # The last - xvfb - comes from https://pygobject.readthedocs.io/en/latest/guide/testing.html:
         # to run a GTK app headless we create a fake X server with xvfb
-        apt-get update &&\
-        apt-get install -y libgirepository1.0-dev gcc libcairo2-dev pkg-config gir1.2-gtk-3.0 xvfb &&\
-        pip install . 
+        sudo apt-get update &&\
+        sudo apt-get install -y libgirepository1.0-dev gcc libcairo2-dev pkg-config gir1.2-gtk-3.0 xvfb &&\
+        pip install .
     - name: Test with pytest
       run: |
         xvfb-run pytest unit/
