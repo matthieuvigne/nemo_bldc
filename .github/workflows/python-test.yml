@@ -1,0 +1,32 @@
+# This workflow will install Python dependencies, run tests and lint with a single version of Python
+# For more information see: https://help.github.com/actions/language-and-framework-guides/using-python-with-github-actions
+
+name: Python application
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: python:3.8-buster
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install dependencies
+      run: |
+        # The first requirements are for pygobject.
+        # The last - xvfb - comes from https://pygobject.readthedocs.io/en/latest/guide/testing.html:
+        # to run a GTK app headless we create a fake X server with xvfb
+        apt-get update &&\
+        apt-get install -y libgirepository1.0-dev gcc libcairo2-dev pkg-config gir1.2-gtk-3.0 xvfb &&\
+        pip install . 
+    - name: Test with pytest
+      run: |
+        xvfb-run pytest unit/
