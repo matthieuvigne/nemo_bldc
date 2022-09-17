@@ -7,7 +7,7 @@ import os
 
 import gi
 gi.require_version('Gtk', '3.0')
-from gi.repository import Gtk, Gdk
+from gi.repository import Gtk, Gdk, GdkPixbuf
 
 from ..ressources import get_ressource_path, load_motor_library
 from ..doc import get_doc_path
@@ -20,7 +20,8 @@ class MainWindow:
         builder = Gtk.Builder()
         builder.add_from_file(get_ressource_path("main_window.glade"))
         self.window = builder.get_object("window")
-        self.window = builder.get_object("window")
+        icon = GdkPixbuf.Pixbuf.new_from_file_at_scale(get_ressource_path("logo.svg"), 100, 100, True)
+        self.window.set_icon(icon)
         # self.window.
         self.notebook = builder.get_object("notebook")
         self.tabs = []
@@ -29,6 +30,7 @@ class MainWindow:
         self.external_window.set_title("Nemo - External viewer")
         self.external_window.set_deletable(False)
         self.external_window.set_size_request(600, 800)
+        self.external_window.set_icon(icon)
         self.external_window.connect("window-state-event", self.minimize_external_window)
         self.current_tab = None
         self.is_using_external_window = False
@@ -47,7 +49,7 @@ class MainWindow:
         dialog = Gtk.Dialog(parent=self.window)
         dialog.add_button("Ok", 0)
         lab = Gtk.Label()
-        lab.set_markup("<big>Oh no - PDF files cannot be opened in docker :( You can find this doc at:</big>")
+        lab.set_markup("<big>Oh no - PDF files cannot be opened in this system :( You can find this doc at:</big>")
         dialog.vbox.add(lab)
 
         ent = Gtk.Entry()

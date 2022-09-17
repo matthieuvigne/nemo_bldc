@@ -264,7 +264,7 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkRadioButton">
+                              <object class="GtkRadioButton" id="toggle_RL">
                                 <property name="label" translatable="yes">Terminal (aka.  line to line
 or phase to phase)</property>
                                 <property name="visible">True</property>
@@ -273,7 +273,6 @@ or phase to phase)</property>
                                 <property name="halign">start</property>
                                 <property name="active">True</property>
                                 <property name="draw-indicator">True</property>
-                                <property name="group">toggle_RL</property>
                               </object>
                               <packing>
                                 <property name="left-attach">2</property>
@@ -281,13 +280,14 @@ or phase to phase)</property>
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkRadioButton" id="toggle_RL">
+                              <object class="GtkRadioButton">
                                 <property name="label" translatable="yes">Single phase</property>
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="halign">start</property>
                                 <property name="draw-indicator">True</property>
+                                <property name="group">toggle_RL</property>
                                 <signal name="toggled" handler="input_updated" swapped="no"/>
                               </object>
                               <packing>
@@ -470,7 +470,6 @@ or phase to phase)</property>
                                     <property name="receives-default">False</property>
                                     <property name="active">True</property>
                                     <property name="draw-indicator">True</property>
-                                    <property name="group">toggle_ke_sp</property>
                                     <signal name="toggled" handler="input_updated" swapped="no"/>
                                   </object>
                                   <packing>
@@ -486,6 +485,7 @@ or phase to phase)</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="draw-indicator">True</property>
+                                    <property name="group">toggle_ke_pp</property>
                                     <signal name="toggled" handler="input_updated" swapped="no"/>
                                   </object>
                                   <packing>
@@ -501,7 +501,7 @@ or phase to phase)</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="draw-indicator">True</property>
-                                    <property name="group">toggle_ke_sp</property>
+                                    <property name="group">toggle_ke_pp</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -516,7 +516,7 @@ or phase to phase)</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="draw-indicator">True</property>
-                                    <property name="group">toggle_ke_sp</property>
+                                    <property name="group">toggle_ke_pp</property>
                                     <signal name="toggled" handler="input_updated" swapped="no"/>
                                   </object>
                                   <packing>

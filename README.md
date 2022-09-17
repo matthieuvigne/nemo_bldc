@@ -1,4 +1,9 @@
-# Nemo
+
+<div align="center">
+  <a href="#"><img width="400px" height="auto" src="src/nemo_bldc/ressources/logo_readme.svg"></a>
+</div>
+
+____
 
 In drones or in robotics, brushless motors are becoming more and more common. However, choosing the right motor for the right application can be quite difficult. Indeed, understanding datasheets can be quite complexe: is a motor with a no-load speed of 5000rpm more powerful that one with the same torque, but specified for 3000rpm at max torque? How do you compare a motor with a KV of 500 rpm/V with one with a Kt of 0.5Nm/Arms? And what do these value even mean? Sometimes you might feel like nobody can answer - well now, **Nemo** can!
 
@@ -21,9 +26,14 @@ Please see the [User Manual](doc/user_manual.pdf) for more information on the so
 
 ## Installing Nemo
 
-### Through a python environment
+### Dependency: PyGObject
 
-`Nemo` is distributed through `pip`:
+**Nemo** depends on PyGObject, python bindings for the GTK library. Refer to [the PyGObject documentation](https://pygobject.readthedocs.io/en/latest/getting_started.html) for instruction on how
+to install it on your system.
+
+### Python install
+
+**Nemo** is distributed though [PyPi](https://pypi.org/project/nemo-bldc/) and can just be installed using `pip`:
 
 ```
 pip install nemo_bldc
@@ -37,4 +47,4 @@ pip install .
 
 ### Windows binary
 
-TODO
+For Windows, you can simply use [this binary](./Nemo.exe) ; you can of source also install it in a python environment by following the above instructions.

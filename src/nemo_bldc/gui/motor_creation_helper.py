@@ -69,12 +69,12 @@ class MotorCreationHelper(GObject.Object):
         self.spin_np = builder.get_object("spin_np")
         self.spin_U = builder.get_object("spin_U")
 
-        self.spin_R.set_value(motor.R)
-        self.spin_L.set_value(1000. * motor.L)
-        self.spin_ke.set_value(motor.ke)
+        self.spin_R.set_value(2 * motor.R)
+        self.spin_L.set_value(2 * 1000. * motor.L)
+        self.spin_ke.set_value(np.sqrt(3) * motor.ke)
         self.spin_Inom.set_value(motor.iq_nominal)
         self.spin_Imax.set_value(motor.iq_max)
-        self.spin_np.set_value(motor.np)
+        self.spin_np.set_value(2 * motor.np)
         self.spin_U.set_value(motor.U)
 
         self.label_R = builder.get_object("label_R")
@@ -97,7 +97,7 @@ class MotorCreationHelper(GObject.Object):
         L = self.spin_L.get_value() / 1000.0
 
         # Convert to single phase, star
-        is_phase_to_phase = not self.toggle_RL.get_active()
+        is_phase_to_phase = self.toggle_RL.get_active()
         coeff = 0.5 if is_phase_to_phase else (1/3 if is_delta else 1)
         R *= coeff
         L *= coeff
