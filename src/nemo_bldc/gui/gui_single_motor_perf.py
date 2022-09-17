@@ -63,7 +63,7 @@ class SingleMotorPerfTab(AbstractTab):
         self.mpl_fig = Figure(figsize=(5, 4), dpi=100)
         ax = self.mpl_fig.add_subplot()
         self.mpl_fig.subplots_adjust(left=0.08, bottom=0.15, right=1.0, top=0.97, wspace=0, hspace=0)
-        self.cbar = self.mpl_fig.colorbar(mpl.cm.ScalarMappable(mpl.colors.Normalize(vmin=0, vmax=1000)))
+        self.cbar = self.mpl_fig.colorbar(mpl.cm.ScalarMappable(mpl.colors.Normalize(vmin=0, vmax=1000)), ax=ax)
 
         self.configure_plot(self.mpl_fig)
 
