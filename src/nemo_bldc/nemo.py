@@ -1,5 +1,6 @@
 import gi
-gi.require_version('Gtk', '3.0')
+
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 
 from .gui.gui_compare_motors import CompareMotors
@@ -9,7 +10,8 @@ from .gui.main_window import MainWindow
 from .ressources import DEFAULT_LIBRARY
 import pkg_resources
 
-def nemo_main(is_unit_test = False):
+
+def nemo_main(is_unit_test=False):
     main = MainWindow()
     main.window.connect("delete-event", Gtk.main_quit)
     main.window.set_default_size(400, 300)
@@ -30,7 +32,6 @@ def nemo_main(is_unit_test = False):
     else:
         Gtk.main()
 
+
 if __name__ == "__main__":
     nemo_main()
-
-

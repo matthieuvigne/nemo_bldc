@@ -6,21 +6,26 @@ import sys
 import os
 
 import gi
-gi.require_version('Gtk', '3.0')
+
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GdkPixbuf
 
 from ..ressources import get_ressource_path, load_motor_library
 from ..doc import get_doc_path
 
+
 class MainWindow:
-    '''
+    """
     GUI tab: compare two motors
-    '''
+    """
+
     def __init__(self):
         builder = Gtk.Builder()
         builder.add_from_file(get_ressource_path("main_window.glade"))
         self.window = builder.get_object("window")
-        icon = GdkPixbuf.Pixbuf.new_from_file_at_scale(get_ressource_path("logo.svg"), 100, 100, True)
+        icon = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+            get_ressource_path("logo.svg"), 100, 100, True
+        )
         self.window.set_icon(icon)
         # self.window.
         self.notebook = builder.get_object("notebook")
@@ -31,7 +36,9 @@ class MainWindow:
         self.external_window.set_deletable(False)
         self.external_window.set_size_request(600, 800)
         self.external_window.set_icon(icon)
-        self.external_window.connect("window-state-event", self.minimize_external_window)
+        self.external_window.connect(
+            "window-state-event", self.minimize_external_window
+        )
         self.current_tab = None
         self.is_using_external_window = False
         builder.connect_signals(self)
@@ -49,7 +56,9 @@ class MainWindow:
         dialog = Gtk.Dialog(parent=self.window)
         dialog.add_button("Ok", 0)
         lab = Gtk.Label()
-        lab.set_markup("<big>Oh no - PDF files cannot be opened in this system :( You can find this doc at:</big>")
+        lab.set_markup(
+            "<big>Oh no - PDF files cannot be opened in this system :( You can find this doc at:</big>"
+        )
         dialog.vbox.add(lab)
 
         ent = Gtk.Entry()
@@ -64,16 +73,18 @@ class MainWindow:
         dialog.destroy()
 
     def show_math_doc(self, *args):
-        if sys.platform == 'linux':
+        if sys.platform == "linux":
             try:
                 subprocess.call(["xdg-open", get_doc_path("BrushlessMotorPhysics.pdf")])
             except FileNotFoundError:
-                self._pdf_viewer_not_available(get_doc_path("BrushlessMotorPhysics.pdf"))
+                self._pdf_viewer_not_available(
+                    get_doc_path("BrushlessMotorPhysics.pdf")
+                )
         else:
             os.startfile(get_doc_path("BrushlessMotorPhysics.pdf"))
 
     def show_user_manual(self, *args):
-        if sys.platform == 'linux':
+        if sys.platform == "linux":
             try:
                 subprocess.call(["xdg-open", get_doc_path("user_manual.pdf")])
             except FileNotFoundError:

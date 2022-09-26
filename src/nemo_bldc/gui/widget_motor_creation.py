@@ -3,7 +3,8 @@ import numpy as np
 import copy
 
 import gi
-gi.require_version('Gtk', '3.0')
+
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GObject, Gdk
 
 import matplotlib.colors as mcolors
@@ -12,6 +13,7 @@ from ..physics.motor import Motor
 from ..ressources import get_ressource_path
 
 from .motor_creation_helper import MotorCreationHelper
+
 
 class DisplayMotor(Motor):
     @staticmethod
@@ -35,10 +37,12 @@ class DisplayMotor(Motor):
         d["color"] = self.color
         return d
 
+
 class MotorCreationWidget(GObject.Object):
-    '''
+    """
     A widget for defining a motor from input parameters
-    '''
+    """
+
     @GObject.Signal
     def motor_updated(self):
         pass
@@ -67,9 +71,9 @@ class MotorCreationWidget(GObject.Object):
 
         self.motor_box = builder.get_object("motor_box")
         self.motor_list = builder.get_object("motor_list")
-        self.set_motor(DisplayMotor(Motor(1, 0.01, 0.0001, 1.0, 1.0, 1.0, 1.0, 1.0),
-                                  "Name",
-                                  "C0"))
+        self.set_motor(
+            DisplayMotor(Motor(1, 0.01, 0.0001, 1.0, 1.0, 1.0, 1.0, 1.0), "Name", "C0")
+        )
 
         self.parent_callback = None
         builder.connect_signals(self)
@@ -78,7 +82,7 @@ class MotorCreationWidget(GObject.Object):
         self.motor = copy.copy(motor)
         self.entry_name.set_text(motor.name)
         self.spin_R.set_value(motor.R)
-        self.spin_L.set_value(1000. * motor.L)
+        self.spin_L.set_value(1000.0 * motor.L)
         self.spin_ke.set_value(motor.ke)
         self.spin_I.set_value(motor.iq_max)
         self.spin_iqnom.set_value(motor.iq_nominal)
@@ -91,14 +95,15 @@ class MotorCreationWidget(GObject.Object):
 
     def input_updated(self, *args, **kargs):
         self.motor.update_constants(
-            n = int(self.spin_np.get_value()),
-            R = self.spin_R.get_value(),
-            L = self.spin_L.get_value() / 1000.0,
-            ke = self.spin_ke.get_value(),
-            iq_max = self.spin_I.get_value(),
-            iq_nominal = self.spin_iqnom.get_value(),
-            U = self.spin_U.get_value(),
-            reduction_ratio = self.spin_rho.get_value())
+            n=int(self.spin_np.get_value()),
+            R=self.spin_R.get_value(),
+            L=self.spin_L.get_value() / 1000.0,
+            ke=self.spin_ke.get_value(),
+            iq_max=self.spin_I.get_value(),
+            iq_nominal=self.spin_iqnom.get_value(),
+            U=self.spin_U.get_value(),
+            reduction_ratio=self.spin_rho.get_value(),
+        )
         self.emit("motor_updated")
 
     def name_updated(self, *args):
@@ -118,9 +123,9 @@ class MotorCreationWidget(GObject.Object):
         self.input_updated()
 
     def update_library(self, library):
-        '''
+        """
         Update motor library.
-        '''
+        """
         self.motor_library = library
         self.motor_list.clear()
         for n in self.motor_library:
@@ -132,4 +137,3 @@ class MotorCreationWidget(GObject.Object):
         result = helper.run()
         if result is not None:
             self.set_motor(DisplayMotor(result, self.motor.name, self.motor.color))
-

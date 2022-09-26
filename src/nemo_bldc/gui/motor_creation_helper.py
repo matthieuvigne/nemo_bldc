@@ -3,17 +3,20 @@ import numpy as np
 import copy
 
 import gi
-gi.require_version('Gtk', '3.0')
+
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, GObject
 
 from ..physics.motor import Motor
 from ..ressources import get_ressource_path
 from .utils import DISPLAYED_CTES
 
+
 class MotorCreationHelper(GObject.Object):
-    '''
+    """
     A widget for defining a motor from input parameters
-    '''
+    """
+
     @GObject.Signal
     def motor_updated(self):
         pass
@@ -53,7 +56,7 @@ class MotorCreationHelper(GObject.Object):
         self.ctes_labels = []
         for i, (field, unit, _) in enumerate(DISPLAYED_CTES):
             self.grid_labels.insert_row(2 * i + 1)
-            self.grid_labels.attach(Gtk.Label(label=field), 0, 2 * i + 1, 1 ,1)
+            self.grid_labels.attach(Gtk.Label(label=field), 0, 2 * i + 1, 1, 1)
             self.grid_labels.attach(Gtk.Label(label=unit), 1, 2 * i + 1, 1, 1)
             self.grid_labels.insert_row(2 * i + 2)
             self.grid_labels.attach(Gtk.Separator(), 0, 2 * i + 2, 3, 1)
@@ -70,7 +73,7 @@ class MotorCreationHelper(GObject.Object):
         self.spin_U = builder.get_object("spin_U")
 
         self.spin_R.set_value(2 * motor.R)
-        self.spin_L.set_value(2 * 1000. * motor.L)
+        self.spin_L.set_value(2 * 1000.0 * motor.L)
         self.spin_ke.set_value(np.sqrt(3) * motor.ke)
         self.spin_Inom.set_value(motor.iq_nominal)
         self.spin_Imax.set_value(motor.iq_max)
@@ -88,9 +91,9 @@ class MotorCreationHelper(GObject.Object):
         self.input_updated()
 
     def input_updated(self, *args, **kargs):
-        '''
+        """
         Miscellaneous user input change: update motor and refresh display.
-        '''
+        """
         is_delta = not self.toggle_winding.get_active()
 
         R = self.spin_R.get_value()
@@ -98,7 +101,7 @@ class MotorCreationHelper(GObject.Object):
 
         # Convert to single phase, star
         is_phase_to_phase = self.toggle_RL.get_active()
-        coeff = 0.5 if is_phase_to_phase else (1/3 if is_delta else 1)
+        coeff = 0.5 if is_phase_to_phase else (1 / 3 if is_delta else 1)
         R *= coeff
         L *= coeff
 
@@ -106,11 +109,11 @@ class MotorCreationHelper(GObject.Object):
         val = self.spin_ke.get_value()
         if self.toggle_ke.get_active():
             if self.toggle_ke_sp.get_active():
-                ke = val * 1/np.sqrt(3) if is_delta else 1
+                ke = val * 1 / np.sqrt(3) if is_delta else 1
             elif self.toggle_ke_pp.get_active():
                 ke = val / np.sqrt(3)
             elif self.toggle_ke_sp_rpm.get_active():
-                ke = val * 30 / np.pi * 1/np.sqrt(3) if is_delta else 1
+                ke = val * 30 / np.pi * 1 / np.sqrt(3) if is_delta else 1
             else:
                 ke = val * 30 / np.pi / np.sqrt(3)
         elif self.toggle_kv.get_active():
@@ -126,13 +129,14 @@ class MotorCreationHelper(GObject.Object):
         current_coeff = 1 if self.toggle_current.get_active() else np.sqrt(2)
 
         self.motor.update_constants(
-            n = npoles,
-            R = R,
-            L = L,
-            ke = ke,
-            iq_max = current_coeff * self.spin_Imax.get_value(),
-            iq_nominal = current_coeff * self.spin_Inom.get_value(),
-            U = self.spin_U.get_value())
+            n=npoles,
+            R=R,
+            L=L,
+            ke=ke,
+            iq_max=current_coeff * self.spin_Imax.get_value(),
+            iq_nominal=current_coeff * self.spin_Inom.get_value(),
+            U=self.spin_U.get_value(),
+        )
 
         # Update GUI
         self.label_R.set_text(f"{self.motor.R:.4f}")
@@ -146,9 +150,9 @@ class MotorCreationHelper(GObject.Object):
             i.set_text(f(self.motor))
 
     def mag_updated(self, *args):
-        '''
+        """
         User updated the magnetic parameter choice (Ke, Kv, Kt)
-        '''
+        """
         if self.toggle_ke.get_active():
             act = self.box_ke
         elif self.toggle_kv.get_active():

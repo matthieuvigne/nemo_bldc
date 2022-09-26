@@ -3,7 +3,8 @@ import numpy as np
 from matplotlib.figure import Figure
 
 import gi
-gi.require_version('Gtk', '3.0')
+
+gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
 
 from .widget_motor_creation import DisplayMotor
@@ -13,16 +14,20 @@ from ..ressources import get_ressource_path
 
 
 def motor_to_treeview(mot):
-    return [color_to_pixbuf(mot.get_gtk_color()),
-            mot.name,
-            f"{1 / mot.K_m_art**2:.4f}",
-            f"{mot.kt_q_art:.3f}",
-            f"{mot.nominal_power:.1f}"]
+    return [
+        color_to_pixbuf(mot.get_gtk_color()),
+        mot.name,
+        f"{1 / mot.K_m_art**2:.4f}",
+        f"{mot.kt_q_art:.3f}",
+        f"{mot.nominal_power:.1f}",
+    ]
+
 
 class CompareMotors(AbstractTab):
-    '''
+    """
     GUI tab: compare two motors
-    '''
+    """
+
     def __init__(self):
         builder = Gtk.Builder()
         builder.add_from_file(get_ressource_path("compare_tab.glade"))
@@ -37,9 +42,15 @@ class CompareMotors(AbstractTab):
 
         self.mpl_fig = Figure(figsize=(5, 4), dpi=100)
         ax = self.mpl_fig.add_subplot()
-        self.mpl_fig.subplots_adjust(left=0.2, bottom=0.15, right=0.97, top=0.97, wspace=0, hspace=0)
+        self.mpl_fig.subplots_adjust(
+            left=0.2, bottom=0.15, right=0.97, top=0.97, wspace=0, hspace=0
+        )
+
         def format_coord(x, y):
-            return f"Velocity: {x:.1f}rad/s ({x * 30 / np.pi:.1f}rpm), Torque: {y:.1f}Nm"
+            return (
+                f"Velocity: {x:.1f}rad/s ({x * 30 / np.pi:.1f}rpm), Torque: {y:.1f}Nm"
+            )
+
         ax.format_coord = format_coord
 
         self.configure_plot(self.mpl_fig)
@@ -67,7 +78,7 @@ class CompareMotors(AbstractTab):
         grid_labels = builder.get_object("grid_labels")
         for i, (field, unit, _) in enumerate(DISPLAYED_CTES):
             grid_labels.insert_row(2 * i + 1)
-            grid_labels.attach(Gtk.Label(label=field), 0, 2 * i + 1, 1 ,1)
+            grid_labels.attach(Gtk.Label(label=field), 0, 2 * i + 1, 1, 1)
             grid_labels.attach(Gtk.Label(label=unit), 1, 2 * i + 1, 1, 1)
             grid_labels.insert_row(2 * i + 2)
             grid_labels.attach(Gtk.Separator(), 0, 2 * i + 2, 2, 1)
@@ -82,15 +93,19 @@ class CompareMotors(AbstractTab):
         self.plot_need_update()
 
     def update_plot(self):
-        plot_caracteristics(self.mpl_fig.gca(), self.motors, [m.color for m in self.motors])
+        plot_caracteristics(
+            self.mpl_fig.gca(), self.motors, [m.color for m in self.motors]
+        )
         self.mpl_fig.canvas.draw()
 
     def motor_updated(self, *args):
         if self.selected_motor is not None:
-            self.motors[self.selected_motor] = self.motor_widget.motor
-            self.motor_compare_list[self.selected_motor][2] = f"{1 / self.motor_widget.motor.K_m_art**2:.3f}"
-            self.motor_compare_list[self.selected_motor][3] = f"{self.motor_widget.motor.kt_q_art:.3f}"
-            self.motor_compare_list[self.selected_motor][4] = f"{self.motor_widget.motor.nominal_power:.1f}"
+            motor = self.motor_widget.motor
+            self.motors[self.selected_motor] = motor
+            list_el = self.motor_compare_list[self.selected_motor]
+            list_el[2] = f"{1 / motor.K_m_art**2:.3f}"
+            list_el[3] = f"{motor.kt_q_art:.3f}"
+            list_el[4] = f"{motor.nominal_power:.1f}"
             self.param_update(),
 
     def tree_changed(self, selection):
@@ -105,7 +120,7 @@ class CompareMotors(AbstractTab):
     def add_motor(self, *args):
         name = list(self.motor_widget.motor_library.keys())[0]
         m = self.motor_widget.motor_library[name]
-        mot = DisplayMotor(m, name,f"C{self.n_motor_created}")
+        mot = DisplayMotor(m, name, f"C{self.n_motor_created}")
         self.n_motor_created += 1
         self.motors.append(mot)
         self.motor_compare_list.append(motor_to_treeview(mot))
@@ -113,9 +128,14 @@ class CompareMotors(AbstractTab):
         # Create new column.
         nc = len(self.grid_column)
         self.grid_ctes.insert_column(2 * nc)
-        self.grid_ctes.attach(Gtk.Separator(), 2 * nc, 0, 1, 2 * len(DISPLAYED_CTES) + 1)
+        self.grid_ctes.attach(
+            Gtk.Separator(), 2 * nc, 0, 1, 2 * len(DISPLAYED_CTES) + 1
+        )
         self.grid_ctes.insert_column(2 * nc + 1)
-        self.grid_column.append([Gtk.Label(label='label')] + [Gtk.Label(label='label') for _ in DISPLAYED_CTES])
+        self.grid_column.append(
+            [Gtk.Label(label="label")]
+            + [Gtk.Label(label="label") for _ in DISPLAYED_CTES]
+        )
         for i, label in enumerate(self.grid_column[-1]):
             self.grid_ctes.attach(label, 2 * nc + 1, 2 * i - 1, 1, 1)
             self.grid_ctes.attach(Gtk.Separator(), 2 * nc + 1, 2 * i, 1, 1)
