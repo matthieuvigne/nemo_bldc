@@ -2,12 +2,11 @@ import typing as tp
 import numpy as np
 from matplotlib.figure import Figure
 import matplotlib as mpl
-import matplotlib.cm as mcolormaps
 
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk, Gdk, GLib, GdkPixbuf
+from gi.repository import Gtk
 
 from .abstract_tab import AbstractTab
 from .utils import *
@@ -149,7 +148,7 @@ class SingleMotorPerfTab(AbstractTab):
             mask = w_grid[i] <= mot.compute_max_speed_deflux(tau_grid[i])
             plot_surface[i][mask] = plot_func(tau_grid[i][mask], w_grid[i][mask])
         ax = self.mpl_fig.gca()
-        cm = mcolormaps.get_cmap("RdBu")
+        cm = mpl.colormaps["RdBu"]
         cm = cm.reversed()
         cm.set_over("w")
         cm.set_under("#A0A0A0")

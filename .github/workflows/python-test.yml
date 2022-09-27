@@ -30,6 +30,7 @@ jobs:
         # to run a GTK app headless we create a fake X server with xvfb
         sudo apt-get update &&\
         sudo apt-get install -y libgirepository1.0-dev gcc libcairo2-dev pkg-config gir1.2-gtk-3.0 xvfb &&\
+        pip install -r .github/workflows/requirements.txt
         pip install .
     - name: Test with pytest
       run: |

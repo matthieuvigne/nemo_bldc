@@ -3,9 +3,13 @@ from pathlib import Path
 
 setup(
     name="nemo_bldc",
-    version="1.0.1",
+    version="1.0.2",
     description="A tool to evaluate and compare brushless motors",
     long_description=Path("README.md").read_text("utf8"),
+    long_description_content_type='text/markdown',
+    project_urls={
+        "Source": "https://github.com/matthieuvigne/nemo_bldc",
+    },
     author="Matthieu Vigne",
     license="MIT",
     packages=find_namespace_packages("src"),
