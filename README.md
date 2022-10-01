@@ -19,7 +19,7 @@ Let's take an example: [My Actuator](https://www.myactuator.com/)'s pancake moto
   - obtain detailed information about a motor, like output power, efficiency, required battery current... that may not be available on the datasheet
   - more generally, learn about brushless motors, as the [full mathematical model is detailed here](https://raw.githubusercontent.com/matthieuvigne/nemo_bldc/main/src/nemo_bldc/doc/BrushlessMotorPhysics.pdf)
 
-Please see the [User Manual](https://raw.githubusercontent.com/matthieuvigne/nemo_bldc/main/doc/user_manual.pdf) for more information on the software.
+Please see the [User Manual](https://raw.githubusercontent.com/matthieuvigne/nemo_bldc/main/src/nemo_bldc/doc/user_manual.pdf) for more information on the software.
 
 <u>*Important note*</u>: **Nemo** works by using the classical linear model of non-sallient PMSM. While this model is known to be fairly accurate (being the base of Field-Oriented Control), in practice non-linear phenomenons can alter motor performance (magnetic saturation, cogging, friction...). Also, motor parameters usually vary between one unit and another (manufacturers typically guarantee them by 10%). Thus, values from the manufacturer's datasheet may differ from those given by **Nemo**: when in doubt, don't hesitate to ask the manufacturer about their datasheet. As always in engineering, remain cautious and plan system dimensioning with a reasonable margin of error.
 
@@ -48,4 +48,4 @@ pip install .
 
 ### Windows binary
 
-For Windows, you can simply use [this binary](https://github.com/matthieuvigne/nemo_bldc/raw/main/Nemo.exe) ; you can of source also install it in a python environment by following the above instructions.
+For Windows, you can simply use [this binary](https://github.com/matthieuvigne/nemo_bldc/raw/main/Nemo.exe) ; you can of course also install it in a python environment by following the above instructions.
