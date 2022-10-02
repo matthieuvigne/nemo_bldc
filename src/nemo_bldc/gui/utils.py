@@ -120,4 +120,3 @@ def plot_caracteristics(ax,
                         return x * m.kt_q_art
                     sa = ax.secondary_yaxis(-0.06 -0.04 * i , functions=(functools.partial(direct, m=m), functools.partial(inv, m=m)), color=colors[i])
             ax.grid(True)
-

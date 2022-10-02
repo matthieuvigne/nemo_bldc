@@ -22,6 +22,7 @@ setup(
         "pycairo",  # Can cause issues if not installed before PyGObject - use pip and not setuptools to run install
         "pytest",
         "numpy",
+        "scipy",
         "matplotlib",
         "PyGObject",
     ],

@@ -38,7 +38,8 @@ class AbstractTab:
         self.motor_widget = MotorCreationWidget()
         builder.connect_signals(self)
 
-    def configure_plot(self, matplotlib_plot):
+    def configure_plot(self, matplotlib_plot, has_overlay=True):
+        self.has_overlay = has_overlay
         canvas = FigureCanvas(matplotlib_plot)
         canvas.set_size_request(800, 600)
 
@@ -57,15 +58,21 @@ class AbstractTab:
         self.button.set_valign(Gtk.Align.START)
         self.button.set_margin_top(50)
 
-        overlay = Gtk.Overlay()
-        self.scroll_widget.add(overlay)
-        overlay.add(vbox)
-        overlay.add_overlay(self.button)
+        if self.has_overlay:
+            overlay = Gtk.Overlay()
+            self.scroll_widget.add(overlay)
+            overlay.add(vbox)
+            overlay.add_overlay(self.button)
+        else:
+            self.scroll_widget.add(vbox)
 
         self.button.set_visible(False)
 
     def plot_need_update(self):
-        self.button.set_visible(True)
+        if self.has_overlay:
+            self.button.set_visible(True)
+        else:
+            self.update_plot()
 
     def user_asked_for_update(self, *args):
         self.button.set_visible(False)
