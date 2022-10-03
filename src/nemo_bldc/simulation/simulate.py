@@ -72,13 +72,13 @@ class MotorSimulator:
         theta = x[0]
         dtheta = x[1]
         iphase = x[2:]
-        idq = clarke_park(self.motor.np * theta, iphase)
+        idq = clarke_park(self.motor.np * self.motor.rho * theta, iphase)
         tau = self.motor.kt_q_art * idq[1] - self.load.value(t)
         ddtheta = (- self.nu * dtheta + tau) / self.I
         dx = np.zeros(5)
         dx[0] = dtheta
         dx[1] = ddtheta
-        dx[2:] = (-self.motor.R * iphase + self.motor.ke * dtheta * bemf(self.motor.np * theta) + Vphase) / self.motor.L
+        dx[2:] = (-self.motor.R * iphase + self.motor.ke * self.motor.rho * dtheta * bemf(self.motor.np * self.motor.rho * theta) + Vphase) / self.motor.L
 
         return dx
 
@@ -89,7 +89,7 @@ class MotorSimulator:
         @param dt Integration length
         @param Vdq_target Direct and quadrature voltage target
         '''
-        Vphase = svpwm(self.motor.np * self.state[0], Vdq_target, self.motor.U)
+        Vphase = svpwm(self.motor.np * self.motor.rho * self.state[0], Vdq_target, self.motor.U)
         self.Vphase = Vphase
 
         # self.state = scipy.integrate.solve_ivp(self._dynamics, (0, self.dt), self.state, args=(Vphase,)).y[:, -1]
@@ -151,7 +151,6 @@ def simulate(motor: Motor,
 
     simulator = MotorSimulator(motor, system_inertia, system_friction, dt, load_torque_signal)
 
-    error_message = ""
     for i in range(1, len(time)):
         t = result.time[i]
         # Position and velocity loops, if enabled.
@@ -182,9 +181,9 @@ def simulate(motor: Motor,
         # Store results
         result.theta[i] = simulator.state[0]
         result.dtheta[i] = simulator.state[1]
-        result.idq[:, i] = clarke_park(motor.np * result.theta[i], simulator.state[2:])
+        result.idq[:, i] = clarke_park(motor.np * motor.rho * result.theta[i], simulator.state[2:])
         result.iphase[:, i] = simulator.state[2:]
-        result.Vdq[:, i] = clarke_park(motor.np * result.theta[i - 1], simulator.Vphase)
+        result.Vdq[:, i] = clarke_park(motor.np * motor.rho * result.theta[i], simulator.Vphase)
         result.Vphase[:, i] =  simulator.Vphase
         result.pos_target[i] = target_position
         result.vel_target[i] = target_velocity
@@ -194,7 +193,6 @@ def simulate(motor: Motor,
 
         if np.max(np.abs(simulator.state[2:])) > 10 * motor.iq_max:
             # Simulation is unstable
-            error_message = "Excessive current detected, simulation is likely numerically unstable.\n" +\
-                            "Please check controller gains or increase control frequency."
-            break
-    return result, error_message
+            raise ArithmeticError("Excessive current detected, simulation is likely numerically unstable.\n" +\
+                            "Please check controller gains or increase control frequency.")
+    return result

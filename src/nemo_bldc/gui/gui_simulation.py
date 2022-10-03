@@ -158,7 +158,8 @@ class SimulateMotor(AbstractTab):
             return
         control_type = self.combo_box_type.get_model()[tree_iter][1]
 
-        self.result, error_message = simulate(self.motor_widget.motor,
+        try:
+            self.result = simulate(self.motor_widget.motor,
                                ControlType[control_type],
                                self.input_signal_widget.signal,
                                self.spin_duration.get_value(),
@@ -172,13 +173,13 @@ class SimulateMotor(AbstractTab):
                                self.direct_current_signal_widget.signal,
                                self.load_signal_widget.signal,
                                )
-        if error_message != "":
+        except ArithmeticError as e:
             dialog = Gtk.MessageDialog(
                 message_type=Gtk.MessageType.INFO,
                 buttons=Gtk.ButtonsType.OK,
                 text="Warning: an error occured during simulation !",
             )
-            dialog.format_secondary_text(error_message)
+            dialog.format_secondary_text(str(e))
             dialog.run()
             dialog.destroy()
 
