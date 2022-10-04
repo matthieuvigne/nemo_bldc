@@ -13,7 +13,9 @@ import pkg_resources
 
 
 def nemo_main(is_unit_test=False):
-    main = MainWindow()
+    version = pkg_resources.require("nemo_bldc")[0].version
+
+    main = MainWindow(version)
     main.window.connect("delete-event", Gtk.main_quit)
     main.window.set_default_size(400, 300)
 
@@ -25,8 +27,6 @@ def nemo_main(is_unit_test=False):
         tab.update_library(DEFAULT_LIBRARY)
     c_tab.add_motor()
 
-    version = pkg_resources.require("nemo_bldc")[0].version
-    main.window.set_title(f"Nemo - {version}")
     main.window.show_all()
     if is_unit_test:
         for t in main.tabs:

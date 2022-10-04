@@ -1,5 +1,5 @@
 ---
-title: "Nemo V1.0 - User manual"
+title: "Nemo V1.1 - User manual"
 geometry: "left=3cm,right=3cm,top=3cm,bottom=3cm"
 output: pdf_document
 linkcolor: red
@@ -32,14 +32,14 @@ A motor (actuator) is parametrized in Nemo by 8 parameters:
  - $\rho$, the reduction ratio
  - $U$, the input voltage
 
-Additionnaly, a motor also has a name, used to create a legend.
+Additionally, a motor also has a name, used to create a legend.
 
 
 These parameters can be set manually through the GUI, in the motor configuration widget shown below.\
 ![](Figures/motor_creation_widget.png)
 
 To help you enter these values correctly, clicking on the "Helper" button will bring a dialog which will compute the
-corresponding per-phase value from datasheet information (e.g. line to line values, delta motors, magnet caracterized in
+corresponding per-phase value from datasheet information (e.g. line to line values, delta motors, magnet characterized in
 terms of $k_v$, $k_t$ or $k_e$...)
 ![](Figures/motor_creation_helper.png)
 
@@ -75,7 +75,7 @@ The top of the main window gives access to several functions:
  - 1: *library loading button*: use this to replace the default library by another library json file
  - 2: *external plot switch*: The main objective of Nemo is to plot graphs. But because part of the screen is taken the GUI, the plot is not that big.
  To overcome this issue, the plot can be done in its own floating window, by activating this switch. When the 'external plot' switch is on, the plot is done on
- another window, wich can be maximized / move to another screen. To return to the single window mode, you can either deactivate the
+ another window, which can be maximized / move to another screen. To return to the single window mode, you can either deactivate the
  switch, or minimize the external window (*note that the external window cannot be closed, only minimized*)
 
  - 3: *help* A drop-down menu, with a link to this user manual, and the mathematical documentation explaining the underlying model and computations.
@@ -134,3 +134,39 @@ The top of the main window gives access to several functions:
 
 *Example*: in this picture, the rotor and stator are both heated by 25°C from their nominal temperature. As a result, the torque decreases (due to a lower $k_e$). The increase
 in $R$ reduces the max velocity at max torque, while the reduction of $k_e$ decreases the back EMF, hence a larger no-load speed.
+
+\pagebreak
+
+# The 'Simulation' Tab
+
+**Objective**: simulate motor motion using a FOC controller. More specifically:
+
+ - the motor driver follows the classical cascade control loop structure: a position PI feeds a velocity PI which feeds a current PI. This outputs direct and quadrature voltage targets, which are then executed using space vector modulation PWM.
+  - the mechanical equation reads $I \ddot{\theta} = - \nu \dot{\theta} + \tau_m - \tau_l$, with $I$ the inertia, $\nu$ the viscous friction coefficient, $\tau_m$ the torque produced by the motor, and $\tau_l$ an extra resistive torque (load torque).
+
+![](Figures/simulate_basic.png)
+
+
+**GUI**
+
+The configuration of the simulation has many parameters, and thus is done in two separate tabs shown here side by side:\
+![](Figures/simulate_config.png)
+
+ - Basic:
+    - 1: Simulation global parameters
+        - Simulation duration
+        - The type of control: position, velocity or current (i.e. torque)
+        - Control loop frequency
+        - The system's mechanical inertia
+        - The system's viscous friction
+    - 2: Configuration of the input signal. This signal is either a position, velocity or current reference, depending on the type of simulation selected.
+    - 3: The motor being simulated. Note that the whole simulation is done at the articular level, i.e. the position and velocity plotted, or the feedback gains, refer to the output position (after the reduction ratio).
+    - 4: Configuration of the plot - select the plots that you want to appear.
+ - Advanced
+    - 5: Direct current target: this is an exogenous signal, which can be used e.g. for defluxing
+    - 6: Load torque (exogenous signal)
+    - 7: Current loop PI gains and anti-windup limit value.
+    - 8: Velocity loop PI gains and anti-windup limit value.
+    - 9: Position loop PI gains and anti-windup limit value.
+ - 10: Button to launch the simulation
+

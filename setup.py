@@ -3,7 +3,7 @@ from pathlib import Path
 
 setup(
     name="nemo_bldc",
-    version="1.0.2",
+    version="1.1.0",
     description="A tool to evaluate and compare brushless motors",
     long_description=Path("README.md").read_text("utf8"),
     long_description_content_type='text/markdown',

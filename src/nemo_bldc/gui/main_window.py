@@ -19,10 +19,17 @@ class MainWindow:
     GUI tab: compare two motors
     """
 
-    def __init__(self):
+    def __init__(self, version):
         builder = Gtk.Builder()
         builder.add_from_file(get_ressource_path("main_window.glade"))
         self.window = builder.get_object("window")
+        self.window.set_title("Nemo")
+        self.about_dialog = builder.get_object("about_dialog")
+        self.about_dialog.set_version(f"Version {version}")
+        icon = GdkPixbuf.Pixbuf.new_from_file_at_scale(
+            get_ressource_path("logo_readme.svg"), 700, -1, True
+        )
+        self.about_dialog.set_logo(icon)
         icon = GdkPixbuf.Pixbuf.new_from_file_at_scale(
             get_ressource_path("logo.svg"), 100, 100, True
         )
@@ -91,6 +98,10 @@ class MainWindow:
                 self._pdf_viewer_not_available(get_doc_path("user_manual.pdf"))
         else:
             os.startfile(get_doc_path("user_manual.pdf"))
+
+    def show_about_dialog(self, *args):
+        self.about_dialog.run()
+        self.about_dialog.hide()
 
     def switch_plot_window(self, widget, state):
         self.is_using_external_window = state
