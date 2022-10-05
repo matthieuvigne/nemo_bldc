@@ -166,7 +166,18 @@ The configuration of the simulation has many parameters, and thus is done in two
     - 5: Direct current target: this is an exogenous signal, which can be used e.g. for defluxing
     - 6: Load torque (exogenous signal)
     - 7: Current loop PI gains and anti-windup limit value.
-    - 8: Velocity loop PI gains and anti-windup limit value.
-    - 9: Position loop PI gains and anti-windup limit value.
+    - 8: Velocity loop PI gains and anti-windup limit value. Note that the gains refer to the output velocity (after the reduction ratio).
+    - 9: Position loop PI gains and anti-windup limit value. Note that the gains refer to the output position (after the reduction ratio).
  - 10: Button to launch the simulation
 
+
+**Plot**
+
+The following plots are available:
+
+ - Position tracking: output (after reduction ratio) position and target position
+ - Velocity tracking: output (after reduction ratio) velocity and target velocity
+ - Current tracking: motor quadrature and direct current, and the corresponding target.
+ - Quadrature/direct voltage: the target (i.e. current loop output) voltages are also plotted *below* the current value. They only become visible if a voltage saturation happen: otherwise, as the PWM generation is ideal (performed analytically), the actual value is equal to its target.
+ - Current for each phase
+ - Voltage for each phase

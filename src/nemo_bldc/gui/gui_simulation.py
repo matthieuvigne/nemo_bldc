@@ -142,7 +142,7 @@ class SimulateMotor(AbstractTab):
         box.pack_start(self.current_pi_widget.frame, False, False, 0)
         self.velocity_pi_widget = PIConfigWidget("Velocity loop PI gains", "A/(rad/s)")
         box.pack_start(self.velocity_pi_widget.frame, False, False, 0)
-        self.position_pi_widget = PIConfigWidget("Position loop PI gains", "(rad/s)/rad")
+        self.position_pi_widget = PIConfigWidget("Position loop PI gains", "(rad/s)/rad", "rad/s")
         box.pack_start(self.position_pi_widget.frame, False, False, 0)
 
         # "Reasonable" initial guess for typical applications

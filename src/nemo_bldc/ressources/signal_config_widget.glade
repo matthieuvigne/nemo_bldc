@@ -20,6 +20,37 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
+  <object class="GtkAdjustment" id="adj_phase">
+    <property name="upper">6.2831999999999999</property>
+    <property name="step-increment">0.01</property>
+    <property name="page-increment">10</property>
+  </object>
+  <object class="GtkListStore" id="signal_shape_list">
+    <columns>
+      <!-- column-name Name -->
+      <column type="gchararray"/>
+      <!-- column-name ClassName -->
+      <column type="gchararray"/>
+    </columns>
+    <data>
+      <row>
+        <col id="0" translatable="yes">Constant</col>
+        <col id="1" translatable="yes">SignalConstant</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Sinusoid</col>
+        <col id="1" translatable="yes">SignalSinus</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Square</col>
+        <col id="1" translatable="yes">SignalSquare</col>
+      </row>
+      <row>
+        <col id="0" translatable="yes">Triangle</col>
+        <col id="1" translatable="yes">SignalTriangle</col>
+      </row>
+    </data>
+  </object>
   <object class="GtkFrame" id="frame">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -72,7 +103,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Frequency</property>
+                <property name="label" translatable="yes">Frequency (Hz)</property>
               </object>
               <packing>
                 <property name="left-attach">0</property>
@@ -124,7 +155,7 @@
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
-                <property name="label" translatable="yes">Phase</property>
+                <property name="label" translatable="yes">Phase (rad)</property>
               </object>
               <packing>
                 <property name="left-attach">2</property>
@@ -186,28 +217,5 @@
         <property name="label" translatable="yes">Signal</property>
       </object>
     </child>
-  </object>
-  <object class="GtkAdjustment" id="adj_phase">
-    <property name="upper">6.2831999999999999</property>
-    <property name="step-increment">0.01</property>
-    <property name="page-increment">10</property>
-  </object>
-  <object class="GtkListStore" id="signal_shape_list">
-    <columns>
-      <!-- column-name Name -->
-      <column type="gchararray"/>
-      <!-- column-name ClassName -->
-      <column type="gchararray"/>
-    </columns>
-    <data>
-      <row>
-        <col id="0" translatable="yes">Constant</col>
-        <col id="1" translatable="yes">SignalConstant</col>
-      </row>
-      <row>
-        <col id="0" translatable="yes">Sinusoid</col>
-        <col id="1" translatable="yes">SignalSinus</col>
-      </row>
-    </data>
   </object>
 </interface>

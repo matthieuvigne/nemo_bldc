@@ -1,6 +1,6 @@
-import typing as tp
 import numpy as np
 import sys
+import scipy.signal
 
 class AbstractSignal:
     """
@@ -41,6 +41,25 @@ class SignalSinus(AbstractSignal):
         """
         return self.A * self.omega * np.cos(self.omega * t + self.phi)
 
+class SignalSquare(AbstractSignal):
+    def value(self, t: float):
+        """
+        Return the value of the signal at time t
+        """
+        return self.offset + self.A * (scipy.signal.square(self.omega * t + self.phi) + 1) / 2
+
+class SignalTriangle(AbstractSignal):
+    def value(self, t: float):
+        """
+        Return the value of the signal at time t
+        """
+        return self.offset + self.A * (scipy.signal.sawtooth(self.omega * t + self.phi, width=0.5) + 1) / 2
+
+    def derivative(self, t: float):
+        """
+        Return the derivative of the signal at time t
+        """
+        return 2 * self.A * scipy.signal.square(self.omega * t + self.phi)
 
 def create_signal(signal_class_name: str,
                   frequency: float,

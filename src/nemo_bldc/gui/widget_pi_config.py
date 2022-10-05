@@ -1,6 +1,5 @@
 import typing as tp
 import numpy as np
-import copy
 
 import gi
 
@@ -16,14 +15,16 @@ class PIConfigWidget:
     """
     A class for configuring a PI controller
     """
-    def __init__(self, name:str, kp_unit:str):
+    def __init__(self, name:str, kp_unit:str, ki_unit:tp.Optional[str] = None):
         builder = Gtk.Builder()
         builder.add_from_file(get_ressource_path("pi_config_widget.glade"))
         self.frame = builder.get_object("frame")
 
         builder.get_object("label_title").set_label(name)
         builder.get_object("label_kp").set_label(f"Kp ({kp_unit})")
-        builder.get_object("label_max").set_label(f"Maximum integral correction ({kp_unit})")
+        if ki_unit is None:
+            ki_unit = kp_unit.split('/')[0]
+        builder.get_object("label_max").set_label(f"Maximum integral correction ({ki_unit})")
 
         self.spin_kp = builder.get_object("spin_kp")
         self.spin_ki = builder.get_object("spin_ki")
