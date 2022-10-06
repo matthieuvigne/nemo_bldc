@@ -44,7 +44,11 @@ class AbstractTab:
         canvas.set_size_request(800, 600)
 
         vbox = Gtk.VBox()
-        toolbar = NavigationToolbar(canvas)
+        try:
+            toolbar = NavigationToolbar(canvas)
+        except TypeError:
+            # Backward compatibility with matplotlib < 3.6.0
+            toolbar = NavigationToolbar(canvas, self.scroll_widget)
         vbox.pack_start(toolbar, False, False, 0)
         vbox.pack_start(canvas, True, True, 0)
 

@@ -22,17 +22,7 @@
             <property name="can-focus">False</property>
             <property name="layout-style">end</property>
             <child>
-              <object class="GtkButton" id="button1">
-                <property name="label" translatable="yes">Close</property>
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-              </object>
-              <packing>
-                <property name="expand">True</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
+              <placeholder/>
             </child>
           </object>
           <packing>
@@ -46,9 +36,6 @@
         </child>
       </object>
     </child>
-    <action-widgets>
-      <action-widget response="-7">button1</action-widget>
-    </action-widgets>
   </object>
   <object class="GtkFileFilter" id="filefilter1">
     <patterns>

@@ -1,7 +1,6 @@
 import typing as tp
 import numpy as np
 from enum import Enum
-import scipy.integrate
 
 from .signal import AbstractSignal, SignalConstant
 from .pi_controller import PIController
@@ -92,7 +91,6 @@ class MotorSimulator:
         Vphase = svpwm(self.motor.np * self.motor.rho * self.state[0], Vdq_target, self.motor.U)
         self.Vphase = Vphase
 
-        # self.state = scipy.integrate.solve_ivp(self._dynamics, (0, self.dt), self.state, args=(Vphase,)).y[:, -1]
         self.state += self.dt * self._dynamics(self.t, self.state, Vphase)
         self.t += self.dt
 

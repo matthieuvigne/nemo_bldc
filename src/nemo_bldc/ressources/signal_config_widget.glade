@@ -193,6 +193,7 @@
                 <property name="can-focus">True</property>
                 <property name="text" translatable="yes">25</property>
                 <property name="adjustment">adj_offset</property>
+                <property name="digits">2</property>
                 <signal name="value-changed" handler="input_updated" swapped="no"/>
               </object>
               <packing>
