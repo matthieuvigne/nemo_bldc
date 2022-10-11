@@ -1,6 +1,7 @@
 import typing as tp
 import numpy as np
 from enum import Enum
+import time
 
 from .signal import AbstractSignal, SignalConstant
 from .pi_controller import PIController
@@ -91,7 +92,7 @@ class MotorSimulator:
         Vphase = svpwm(self.motor.np * self.motor.rho * self.state[0], Vdq_target, self.motor.U)
         self.Vphase = Vphase
 
-        self.state += self.dt * self._dynamics(self.t, self.state, Vphase)
+        self.state += self.dt * self._dynamics(self.t, self.state, self.Vphase)
         self.t += self.dt
 
 
@@ -107,7 +108,8 @@ def simulate(motor: Motor,
              control_loop_frequency: float = 1000,
              commutation_frequency: float = 10000,
              current_direct_target: AbstractSignal = SignalConstant(),
-             load_torque_signal: AbstractSignal = SignalConstant()
+             load_torque_signal: AbstractSignal = SignalConstant(),
+             gui_queue: tp.Optional["queue"] = None
              ):
     """
     Simulate the motor tracking a reference trajectory using a classical
@@ -132,8 +134,8 @@ def simulate(motor: Motor,
     position_controller.reset_integral(0)
 
     dt = 1 / control_loop_frequency
-    time = np.arange(0, duration + dt, dt)
-    result = SimulationResult(time, motor, control_type)
+    simu_time = np.arange(0, duration + dt, dt)
+    result = SimulationResult(simu_time, motor, control_type)
 
     t = 0
     if control_type == ControlType.POSITION:
@@ -149,8 +151,16 @@ def simulate(motor: Motor,
 
     simulator = MotorSimulator(motor, system_inertia, system_friction, dt, load_torque_signal)
 
-    for i in range(1, len(time)):
+    last_update_time = time.time()
+    for i in range(1, len(simu_time)):
+        # Update queue if needed
+        if gui_queue:
+            t = time.time()
+            if t - last_update_time > 0.020:
+                gui_queue.put(float(i / len(simu_time)))
+                last_update_time = t
         t = result.time[i]
+
         # Position and velocity loops, if enabled.
         target_position = 0
         target_velocity = 0

@@ -1,7 +1,7 @@
 import gi
 
 gi.require_version("Gtk", "3.0")
-from gi.repository import Gtk
+from gi.repository import Gtk, Gdk
 
 from .gui.gui_compare_motors import CompareMotors
 from .gui.gui_single_motor_perf import SingleMotorPerfTab
@@ -14,6 +14,19 @@ import pkg_resources
 
 def nemo_main(is_unit_test=False):
     version = pkg_resources.require("nemo_bldc")[0].version
+
+    style_provider = Gtk.CssProvider()
+    css = b"""
+    progress, trough {
+        min-height: 20px;
+    }
+    """
+    style_provider.load_from_data(css)
+    Gtk.StyleContext.add_provider_for_screen(
+        Gdk.Screen.get_default(),
+        style_provider,
+        Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION
+    )
 
     main = MainWindow(version)
     main.window.connect("delete-event", Gtk.main_quit)
@@ -28,10 +41,9 @@ def nemo_main(is_unit_test=False):
     c_tab.add_motor()
 
     main.window.show_all()
-    if is_unit_test:
-        for t in main.tabs:
-            t.update_plot()
-    else:
+    for t in main.tabs:
+        t.user_asked_for_update()
+    if not is_unit_test:
         Gtk.main()
 
 

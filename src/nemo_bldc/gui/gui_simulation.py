@@ -17,8 +17,10 @@ from .utils import *
 from ..ressources import get_ressource_path
 
 from ..simulation.pi_controller import PIController
-from ..simulation.simulate import simulate, ControlType
+from ..simulation.simulate import SimulationResult, simulate, ControlType
 
+import threading
+import queue
 
 def plot_position_tracking(ax, simulation_result):
     ax.plot(simulation_result.time, simulation_result.theta, label = "Mechanical angle")
@@ -92,6 +94,12 @@ SIMULATION_PLOTS = [("Position tracking", True, plot_position_tracking),
                     ("Phase voltage", True, plot_uphase),
                    ]
 
+def run_simulation_thread(simulation_arguments, queue):
+    try:
+        queue.put(simulate(*simulation_arguments, gui_queue = queue))
+    except Exception as e:
+        queue.put(e)
+
 class SimulateMotor(AbstractTab):
     """
     GUI tab: compare two motors
@@ -108,6 +116,14 @@ class SimulateMotor(AbstractTab):
         self.spin_inertia = builder.get_object("spin_inertia")
         self.spin_nu = builder.get_object("spin_nu")
         self.combo_box_type = builder.get_object("combo_box_type")
+        self.button_run = builder.get_object("button_run")
+        self.box_toplevel = builder.get_object("box_toplevel")
+        self.progress_bar_simu = Gtk.ProgressBar()
+        self.progress_bar_simu.set_show_text(True)
+        self.progress_bar_simu.set_margin_bottom(10)
+        self.progress_bar_simu.set_margin_start(5)
+        self.progress_bar_simu.set_margin_end(5)
+        self.progress_bar_simu.show()
 
         self.input_signal_widget = SignalConfigWidget("Input signal")
 
@@ -150,6 +166,8 @@ class SimulateMotor(AbstractTab):
         self.velocity_pi_widget.set_gains(5.0, 5.0, 10.0)
         self.position_pi_widget.set_gains(10.0, 0.5, 10.0)
 
+        self.simulation_queue = queue.Queue()
+
         builder.connect_signals(self)
 
     def run_clicked(self, button):
@@ -158,32 +176,53 @@ class SimulateMotor(AbstractTab):
             return
         control_type = self.combo_box_type.get_model()[tree_iter][1]
 
-        try:
-            self.result = simulate(self.motor_widget.motor,
-                               ControlType[control_type],
-                               self.input_signal_widget.signal,
-                               self.spin_duration.get_value(),
-                               self.spin_inertia.get_value(),
-                               self.spin_nu.get_value(),
-                               self.current_pi_widget.controller,
-                               self.velocity_pi_widget.controller,
-                               self.position_pi_widget.controller,
-                               self.spin_frequency.get_value(),
-                               0.0,
-                               self.direct_current_signal_widget.signal,
-                               self.load_signal_widget.signal,
-                               )
-        except ArithmeticError as e:
-            dialog = Gtk.MessageDialog(
-                message_type=Gtk.MessageType.INFO,
-                buttons=Gtk.ButtonsType.OK,
-                text="Warning: an error occured during simulation !",
-            )
-            dialog.format_secondary_text(str(e))
-            dialog.run()
-            dialog.destroy()
+        simulate_args = (self.motor_widget.motor,
+                         ControlType[control_type],
+                         self.input_signal_widget.signal,
+                         self.spin_duration.get_value(),
+                         self.spin_inertia.get_value(),
+                         self.spin_nu.get_value(),
+                         self.current_pi_widget.controller,
+                         self.velocity_pi_widget.controller,
+                         self.position_pi_widget.controller,
+                         self.spin_frequency.get_value(),
+                         0.0,
+                         self.direct_current_signal_widget.signal,
+                         self.load_signal_widget.signal,
+                         )
+        th = threading.Thread(target=run_simulation_thread,
+                              args=(simulate_args, self.simulation_queue),
+                              daemon=True)
+        th.start()
+        self.box_toplevel.remove(self.button_run)
+        self.progress_bar_simu.set_fraction(0.5)
+        self.box_toplevel.pack_start(self.progress_bar_simu, False, False, 0)
+        GLib.timeout_add(50, self.check_simu_state)
 
-        self.user_asked_for_update()
+    def check_simu_state(self):
+        try:
+            it = self.simulation_queue.get(block=False)
+            if (isinstance(it, float)):
+                self.progress_bar_simu.set_fraction(it)
+            else:
+                if (isinstance(it, Exception)):
+                    dialog = Gtk.MessageDialog(
+                        message_type=Gtk.MessageType.INFO,
+                        buttons=Gtk.ButtonsType.OK,
+                        text="Warning: an error occured during simulation !",
+                    )
+                    dialog.format_secondary_text(str(it))
+                    dialog.run()
+                    dialog.destroy()
+                elif isinstance(it, SimulationResult):
+                    self.result = it
+                self.box_toplevel.remove(self.progress_bar_simu)
+                self.box_toplevel.pack_start(self.button_run, False, False, 0)
+                self.user_asked_for_update()
+                return False
+        except queue.Empty:
+            pass
+        return True
 
     def plot_config_update(self, button):
         if self.result is not None:
